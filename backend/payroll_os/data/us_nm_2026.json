@@ -1,0 +1,19 @@
+{
+  "jurisdiction_id":"US-NM",
+  "effective_start":"2026-01-01",
+  "effective_end":"2026-12-31",
+  "minimum_wage":12.00,
+  "tipped_minimum_cash_wage":3.00,
+  "overtime_rule":{"type":"weekly","threshold_hours":40,"multiplier":1.5,"daily_overtime":false,"doubletime":false},
+  "local_overrides":[
+    {"jurisdiction_id":"US-NM-SantaFe-City","minimum_wage":15.40,"tipped_minimum_cash_wage":3.00},
+    {"jurisdiction_id":"US-NM-SantaFe-County","minimum_wage":15.40,"tipped_minimum_cash_wage":4.62},
+    {"jurisdiction_id":"US-NM-LasCruces","minimum_wage":13.01,"tipped_minimum_cash_wage":5.20},
+    {"jurisdiction_id":"US-NM-Albuquerque","minimum_wage":12.00,"tipped_minimum_cash_wage":7.20}
+  ],
+  "metadata":{
+    "source_notes":["State $12.00 confirmed 6+ sources","Santa Fe City $15.40/$3.00 from santafenm.gov","Santa Fe County $15.40/$4.62 from santafecountynm.gov","Las Cruces $13.01/$5.20 from OnPay","Albuquerque $12.00/$7.20 from cabq.gov + Bloomberg Tax"],
+    "last_verified":"2026-07-04",
+    "verified_by":"claude-assisted-research"
+  }
+}

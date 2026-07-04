@@ -1,0 +1,14 @@
+{
+  "id": "c8d71b41-50d5-424d-b5d4-065c6a051f0b",
+  "businessName": "My NM Business",
+  "businessType": "General Business",
+  "genesisCompleted": true,
+  "genesisMode": "hands-off",
+  "createdAt": "2026-07-03T08:14:38.925Z",
+  "profileVersion": 1,
+  "toolStack": [
+    "NM Compliance Monitor",
+    "Payroll Manager",
+    "AI Assistant"
+  ]
+}

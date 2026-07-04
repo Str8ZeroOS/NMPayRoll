@@ -1,0 +1,33 @@
+[
+  {
+    "id": "59e5cb99-7895-4685-bd4d-1d7b736e0efe",
+    "symbol": "DEMO",
+    "timestamp": "2026-07-03T08:13:58.763Z",
+    "stochastic": {
+      "percentK": 91.27,
+      "percentD": 40.59,
+      "context": "NEUTRAL",
+      "highestHigh": 156.1,
+      "lowestLow": 143.5,
+      "currentClose": 155,
+      "range": 12.6,
+      "momentum": "RISING",
+      "momentumStrength": "STRONG",
+      "crossSignal": "NONE",
+      "kHistory": [
+        42.5,
+        31.2,
+        18.4,
+        12.1,
+        91.27
+      ]
+    },
+    "decision": {
+      "action": "HOLD",
+      "confidence": 0.52,
+      "reasoning": "NEUTRAL conditions. K:91.27 D:40.59. No clear signal. Wait for cross. Rule-based (Ollama offline)."
+    },
+    "model": "llama3.1:latest",
+    "dataSource": "demo"
+  }
+]

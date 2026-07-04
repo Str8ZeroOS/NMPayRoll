@@ -1,0 +1,7 @@
+[
+  {"jurisdiction_id":"US-NM","type":"state","parent":null,"description":"New Mexico statewide"},
+  {"jurisdiction_id":"US-NM-SantaFe-City","type":"city","parent":"US-NM","description":"City of Santa Fe"},
+  {"jurisdiction_id":"US-NM-SantaFe-County","type":"county","parent":"US-NM","description":"Santa Fe County"},
+  {"jurisdiction_id":"US-NM-LasCruces","type":"city","parent":"US-NM","description":"City of Las Cruces"},
+  {"jurisdiction_id":"US-NM-Albuquerque","type":"city","parent":"US-NM","description":"City of Albuquerque"}
+]
