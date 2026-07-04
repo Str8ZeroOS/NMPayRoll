@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STR8ZERO OS — New Mexico Business Operating System</title>
+<meta name="description" content="Live AI-powered business OS for New Mexico. Real compliance monitoring, Genesis onboarding, market intelligence, and system health — all running live.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#00C896;--purple:#7C3AED;--amber:#F59E0B;--red:#EF4444;--blue:#3B82F6;
+  --bg:#060610;--bg2:#0a0a1a;--surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:rgba(255,255,255,0.65);--text2:rgba(255,255,255,0.35);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#fff;font-family:"Inter",system-ui,sans-serif;overflow-x:hidden}
+
+/* ── NAV ─────────────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,16,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+.logo{font-size:20px;font-weight:900;letter-spacing:-.5px;cursor:pointer}.logo span{color:var(--green)}
+.nav-tabs{display:flex;gap:4px}
+.ntab{background:none;border:none;color:var(--text);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:.15s}
+.ntab:hover,.ntab.active{background:var(--surface2);color:#fff}
+.ntab.active{color:var(--green)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.status-pill{display:flex;align-items:center;gap:6px;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.25);border-radius:99px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--green)}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── PAGES ───────────────────────────────────────────────────── */
+.page{display:none;min-height:calc(100vh - 60px);padding:80px 24px 40px}
+.page.active{display:block}
+
+/* ── HERO PAGE ───────────────────────────────────────────────── */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(124,58,237,0.18) 0%,rgba(0,200,150,0.07) 45%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.3);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--green);font-weight:600;margin-bottom:28px}
+h1.hero-title{font-size:clamp(40px,7vw,82px);font-weight:900;line-height:1.06;letter-spacing:-2px;margin-bottom:22px}
+.g1{background:linear-gradient(135deg,var(--green),#00b4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.g2{background:linear-gradient(135deg,var(--purple),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(15px,2.2vw,20px);color:var(--text);max-width:620px;margin:0 auto 40px;line-height:1.7}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:56px}
+.btn-g{background:linear-gradient(135deg,var(--green),#00b4ff);color:#000;padding:14px 32px;border-radius:99px;font-size:15px;font-weight:800;border:none;cursor:pointer;font-family:inherit;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-g:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,200,150,0.4)}
+.btn-o{background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:#fff;padding:14px 32px;border-radius:99px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+.btn-o:hover{background:rgba(255,255,255,0.1)}
+.hero-stats{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}
+.hstat{text-align:center}
+.hstat-n{font-size:32px;font-weight:900;color:var(--green)}
+.hstat-l{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4}
+
+/* ── LIVE DASHBOARD ──────────────────────────────────────────── */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:1200px;margin:0 auto 32px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;transition:.2s}
+.card:hover{border-color:var(--border2)}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px}
+.card-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px}
+.badge-green{background:rgba(0,200,150,0.15);color:var(--green)}
+.badge-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.badge-red{background:rgba(239,68,68,0.15);color:var(--red)}
+.badge-purple{background:rgba(124,58,237,0.15);color:var(--purple)}
+.big-num{font-size:40px;font-weight:900;line-height:1;margin-bottom:6px}
+.card-sub{font-size:13px;color:var(--text2)}
+.score-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin:12px 0 6px}
+.score-fill{height:100%;border-radius:99px;transition:width 1s ease}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.metric-row:last-child{border-bottom:none}
+.metric-lbl{font-size:13px;color:var(--text)}
+.metric-val{font-size:13px;font-weight:700}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── COMPLIANCE PAGE ─────────────────────────────────────────── */
+.comp-score-ring{position:relative;width:120px;height:120px;margin:0 auto 20px}
+.comp-score-ring svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(255,255,255,0.08);stroke-width:8}
+.ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.2s ease}
+.ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-num{font-size:28px;font-weight:900}
+.ring-lbl{font-size:11px;color:var(--text2)}
+.rule-list{display:flex;flex-direction:column;gap:10px;max-width:900px;margin:0 auto}
+.rule-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:.2s}
+.rule-item:hover{border-color:var(--border2);background:var(--surface2)}
+.rule-icon{font-size:24px;flex-shrink:0}
+.rule-body{flex:1;min-width:0}
+.rule-title{font-size:15px;font-weight:600;margin-bottom:3px}
+.rule-desc{font-size:13px;color:var(--text);line-height:1.4}
+.rule-ref{font-size:11px;color:var(--text2);margin-top:4px;font-family:monospace}
+.rule-status{flex-shrink:0;text-align:right}
+.status-lbl{font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px}
+.s-good{background:rgba(0,200,150,0.12);color:var(--green)}
+.s-warn{background:rgba(245,158,11,0.12);color:var(--amber)}
+.s-danger{background:rgba(239,68,68,0.12);color:var(--red)}
+.s-unknown{background:rgba(255,255,255,0.06);color:var(--text2)}
+
+/* ── GENESIS PAGE ────────────────────────────────────────────── */
+.genesis-wrap{max-width:680px;margin:0 auto}
+.genesis-mode-tabs{display:flex;gap:12px;margin-bottom:28px}
+.gmode{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;text-align:center;transition:.2s}
+.gmode:hover,.gmode.active{border-color:var(--green);background:rgba(0,200,150,0.06)}
+.gmode-icon{font-size:32px;margin-bottom:8px}
+.gmode-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.gmode-desc{font-size:12px;color:var(--text);line-height:1.4}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px}
+.field input,.field select{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:.2s}
+.field input:focus,.field select:focus{border-color:var(--green);background:rgba(0,200,150,0.06)}
+.field select option{background:#1a1a2e;color:#fff}
+.genesis-result{background:var(--surface);border:1px solid rgba(0,200,150,0.25);border-radius:16px;padding:24px;margin-top:20px}
+.genesis-result-title{font-size:16px;font-weight:700;color:var(--green);margin-bottom:16px}
+.profile-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.profile-row:last-child{border-bottom:none}
+.profile-key{color:var(--text)}
+.profile-val{font-weight:600}
+.hands-off-stages{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.stage{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;font-size:13px;transition:.3s}
+.stage.done{background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.15)}
+.stage.active-stage{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2)}
+.stage-icon{font-size:18px;flex-shrink:0}
+
+/* ── MARKET PAGE ─────────────────────────────────────────────── */
+.market-wrap{max-width:900px;margin:0 auto}
+.market-result{background:rgba(0,0,0,0.5);border:1px solid var(--border2);border-radius:16px;padding:24px;font-family:monospace;margin-top:20px}
+.exec-title{font-size:13px;color:var(--text2);letter-spacing:1px;margin-bottom:20px}
+.exec-row{display:flex;justify-content:space-between;margin-bottom:14px;align-items:center}
+.exec-key{font-size:12px;color:var(--text2)}
+.exec-val{font-size:22px;font-weight:900}
+.exec-reasoning{background:rgba(255,255,255,0.04);border-radius:10px;padding:14px;margin-top:14px}
+.exec-r-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-family:"Inter",sans-serif}
+.exec-r-text{font-size:13px;color:var(--text);line-height:1.6;font-family:"Inter",sans-serif}
+.stoch-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.stoch-bar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stoch-val{font-size:28px;font-weight:900;font-family:monospace}
+.stoch-lbl{font-size:11px;color:var(--text2);margin-top:4px}
+.chart-wrap{background:rgba(0,0,0,0.4);border-radius:12px;padding:16px;margin-top:16px}
+.disclaimer{font-size:11px;color:rgba(245,158,11,0.6);background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.5}
+
+/* ── SUPERVISOR PAGE ─────────────────────────────────────────── */
+.sup-wrap{max-width:900px;margin:0 auto}
+.sup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:20px}
+.sup-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
+.sup-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sup-name{font-size:14px;font-weight:700}
+.sup-state{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+.s-healthy{background:rgba(0,200,150,0.12);color:var(--green)}
+.s-degraded{background:rgba(245,158,11,0.12);color:var(--amber)}
+.sup-repairs{font-size:24px;font-weight:900;color:var(--green)}
+.sup-rl{font-size:12px;color:var(--text2)}
+.log-box{background:rgba(0,0,0,0.6);border:1px solid var(--border);border-radius:12px;padding:16px;font-family:monospace;font-size:12px;color:rgba(0,200,150,0.8);max-height:200px;overflow-y:auto;margin-top:16px;line-height:1.8}
+
+/* ── DEVTOOLS PAGE ───────────────────────────────────────────── */
+.dev-wrap{max-width:900px;margin:0 auto}
+.fix-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.fix-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start}
+.fix-icon{font-size:20px;flex-shrink:0}
+.fix-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.fix-text{font-size:12px;color:var(--text);line-height:1.5}
+.fix-resolution{font-size:11px;font-family:monospace;color:rgba(0,200,150,0.6);margin-top:6px;background:rgba(0,0,0,0.3);padding:6px 10px;border-radius:6px}
+
+/* ── ASK AI ──────────────────────────────────────────────────── */
+.ask-wrap{max-width:700px;margin:0 auto}
+.ask-input-row{display:flex;gap:10px;margin-bottom:20px}
+.ask-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:.2s}
+.ask-input:focus{border-color:var(--purple)}
+.ask-history{display:flex;flex-direction:column;gap:12px}
+.ask-msg{border-radius:14px;padding:14px 18px;font-size:14px;line-height:1.6;max-width:90%}
+.ask-user{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.2);align-self:flex-end;margin-left:auto}
+.ask-ai{background:var(--surface);border:1px solid var(--border)}
+.ask-ai-label{font-size:11px;font-weight:700;color:var(--green);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── UTILS ───────────────────────────────────────────────────── */
+.page-header{text-align:center;margin-bottom:36px}
+.page-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-1px;margin-bottom:10px}
+.page-sub{font-size:16px;color:var(--text);max-width:560px;margin:0 auto;line-height:1.5}
+.btn-sm{background:rgba(255,255,255,0.07);border:1px solid var(--border2);color:#fff;padding:8px 18px;border-radius:99px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+.btn-sm:hover{background:rgba(255,255,255,0.12)}
+.btn-primary{background:linear-gradient(135deg,var(--green),#00b4ff);color:#000;padding:12px 28px;border-radius:99px;font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:inherit;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,200,150,0.35)}
+.btn-primary:disabled{opacity:.5;transform:none;box-shadow:none;cursor:wait}
+.btn-purple{background:linear-gradient(135deg,var(--purple),#ec4899);color:#fff}
+.loading{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle}
+.empty{text-align:center;padding:40px;color:var(--text2);font-size:15px}
+.err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--red);margin-top:12px}
+.success{background:rgba(0,200,150,0.08);border:1px solid rgba(0,200,150,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--green);margin-top:12px}
+@media(max-width:768px){
+  nav{padding:12px 16px}.nav-tabs{display:none}
+  .page{padding:72px 16px 32px}.hero{padding:88px 16px 48px}
+  .hero-stats{gap:24px}.stoch-bars{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')"><span>STR8</span>ZERO OS</div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="showPage('home')">Home</button>
+    <button class="ntab" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="ntab" onclick="showPage('compliance')">Compliance</button>
+    <button class="ntab" onclick="showPage('genesis')">Genesis</button>
+    <button class="ntab" onclick="showPage('market')">Market AI</button>
+    <button class="ntab" onclick="showPage('supervisor')">Supervisor</button>
+    <button class="ntab" onclick="showPage('devtools')">Dev Tools</button>
+    <button class="ntab" onclick="showPage('ask')">Ask AI</button>
+  </div>
+  <div class="nav-right">
+    <div class="status-pill" id="nav-status">
+      <div class="sdot"></div>
+      <span id="nav-status-text">Connecting...</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HOME ══════════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-glow"></div>
+    <div style="position:relative;z-index:1">
+      <div class="hero-badge"><div class="sdot"></div>Live on str8zeroos.com — Serving New Mexico</div>
+      <h1 class="hero-title">The OS Built for<br><span class="g1">New Mexico</span><br><span class="g2">Business</span></h1>
+      <p class="hero-sub">STR8ZERO OS is the autonomous business operating system powered by Mamba Mentality AI — handling compliance, payroll, and operations so you can focus on growth.</p>
+      <div class="hero-btns">
+        <button class="btn-g" onclick="showPage('genesis')">&#9658; Start Business Genesis</button>
+        <button class="btn-o" onclick="showPage('dashboard')">Live Dashboard →</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-n" id="h-rules">16</div><div class="hstat-l">NM Compliance Rules<br>Auto-Monitored</div></div>
+        <div class="hstat"><div class="hstat-n">24/7</div><div class="hstat-l">AI Engine<br>Always On</div></div>
+        <div class="hstat"><div class="hstat-n" id="h-uptime">—</div><div class="hstat-l">System Uptime<br>Seconds</div></div>
+        <div class="hstat"><div class="hstat-n">100%</div><div class="hstat-l">Local Data<br>Never Uploaded</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══════════════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="page-header">
+    <div class="page-title">Live System Dashboard</div>
+    <div class="page-sub">Real-time data from the STR8ZERO OS backend on str8zeroos.com</div>
+  </div>
+  <div class="dash-grid" id="dash-grid">
+    <div class="card">
+      <div class="card-head"><span class="card-title">System Health</span><span class="card-badge badge-green" id="d-state">Loading...</span></div>
+      <div class="big-num" id="d-uptime">—</div>
+      <div class="card-sub">seconds uptime</div>
+      <div style="margin-top:14px">
+        <div class="metric-row"><span class="metric-lbl">Version</span><span class="metric-val" id="d-version">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">Environment</span><span class="metric-val" id="d-env">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">AI Engine</span><span class="metric-val" id="d-ai">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">Business Profile</span><span class="metric-val" id="d-profile">—</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Compliance Score</span><span class="card-badge badge-amber" id="d-comp-badge">—</span></div>
+      <div class="score-bar"><div class="score-fill" id="d-comp-bar" style="width:0%;background:linear-gradient(90deg,var(--green),#00b4ff)"></div></div>
+      <div class="big-num" id="d-comp-score" style="color:var(--green)">—</div>
+      <div class="card-sub">Overall NM Compliance</div>
+      <div style="margin-top:14px">
+        <div class="metric-row"><span class="metric-lbl">✅ Compliant Rules</span><span class="metric-val" style="color:var(--green)" id="d-good">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">⚠️ Warnings</span><span class="metric-val" style="color:var(--amber)" id="d-warn">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">❌ Issues</span><span class="metric-val" style="color:var(--red)" id="d-danger">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">Total Rules</span><span class="metric-val" id="d-total">—</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Supervisors</span><span class="card-badge badge-purple" id="d-sup-badge">—</span></div>
+      <div class="big-num" id="d-sup-count" style="color:var(--purple)">—</div>
+      <div class="card-sub">active micro-supervisors</div>
+      <div style="margin-top:14px" id="d-sup-list">
+        <div class="card-sub">Loading supervisors...</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Dev Tools Audit</span><span class="card-badge badge-green" id="d-dev-badge">—</span></div>
+      <div class="big-num" id="d-dev-score" style="color:var(--green)">—%</div>
+      <div class="card-sub">Dev Health Score</div>
+      <div style="margin-top:14px">
+        <div class="metric-row"><span class="metric-lbl">✅ Auto-Fixed</span><span class="metric-val" style="color:var(--green)" id="d-dev-fixed">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">🔍 Needs Review</span><span class="metric-val" style="color:var(--amber)" id="d-dev-review">—</span></div>
+        <div class="metric-row"><span class="metric-lbl">Total Issues Found</span><span class="metric-val" id="d-dev-total">—</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:8px">
+    <button class="btn-sm" onclick="loadDashboard()">↻ Refresh</button>
+  </div>
+</div>
+
+<!-- ══ COMPLIANCE ══════════════════════════════════════════════════ -->
+<div id="page-compliance" class="page">
+  <div class="page-header">
+    <div class="page-title">NM Compliance Monitor</div>
+    <div class="page-sub">16 New Mexico and federal rules — monitored automatically</div>
+  </div>
+  <div style="text-align:center;margin-bottom:28px">
+    <div class="comp-score-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle class="ring-bg" cx="60" cy="60" r="52"/>
+        <circle class="ring-fill" id="comp-ring" cx="60" cy="60" r="52" stroke="var(--green)"
+          stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+      </svg>
+      <div class="ring-text">
+        <div class="ring-num" id="comp-score-num">—</div>
+        <div class="ring-lbl">Score</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">
+      <span style="font-size:13px;color:var(--green)">✅ <span id="comp-good">—</span> Compliant</span>
+      <span style="font-size:13px;color:var(--amber)">⚠️ <span id="comp-warn">—</span> Warnings</span>
+      <span style="font-size:13px;color:var(--red)">❌ <span id="comp-danger">—</span> Issues</span>
+    </div>
+    <button class="btn-sm" onclick="loadCompliance()">↻ Refresh Rules</button>
+  </div>
+  <div class="rule-list" id="rule-list">
+    <div class="empty">Loading compliance rules...</div>
+  </div>
+</div>
+
+<!-- ══ GENESIS ══════════════════════════════════════════════════ -->
+<div id="page-genesis" class="page">
+  <div class="page-header">
+    <div class="page-title">Business Genesis</div>
+    <div class="page-sub">Set up your personalized STR8ZERO OS business profile</div>
+  </div>
+  <div class="genesis-wrap">
+    <div id="genesis-profile-banner" style="display:none" class="success">
+      ✅ Business profile active: <strong id="genesis-biz-name"></strong>
+      <button class="btn-sm" style="margin-left:12px;font-size:11px" onclick="clearGenesis()">Reset</button>
+    </div>
+    <div class="genesis-mode-tabs">
+      <div class="gmode active" id="gmode-guided" onclick="setGenesisMode('guided')">
+        <div class="gmode-icon">💬</div>
+        <div class="gmode-title">Guided Mode</div>
+        <div class="gmode-desc">Answer 5 quick questions and let the OS build your profile</div>
+      </div>
+      <div class="gmode" id="gmode-hands" onclick="setGenesisMode('hands-off')">
+        <div class="gmode-icon">🤖</div>
+        <div class="gmode-title">Hands-Off Mode</div>
+        <div class="gmode-desc">Let the AI scan and detect your business automatically</div>
+      </div>
+    </div>
+
+    <!-- Guided Form -->
+    <div id="genesis-guided-form">
+      <div class="field">
+        <label>Business Name *</label>
+        <input type="text" id="g-biz-name" placeholder="e.g. Santa Fe Tacos LLC" />
+      </div>
+      <div class="field">
+        <label>Business Type</label>
+        <select id="g-biz-type">
+          <option value="">Select type...</option>
+          <option>Restaurant / Food Service</option>
+          <option>Retail Store</option>
+          <option>Construction / Contractor</option>
+          <option>Healthcare / Medical</option>
+          <option>Professional Services</option>
+          <option>Technology</option>
+          <option>Agriculture / Ranching</option>
+          <option>Tourism / Hospitality</option>
+          <option>Nonprofit</option>
+          <option>General Business</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Number of Employees</label>
+        <select id="g-employees">
+          <option value="1">Just me (1)</option>
+          <option value="2-5">2–5 employees</option>
+          <option value="6-15">6–15 employees</option>
+          <option value="16-50">16–50 employees</option>
+          <option value="50+">50+ employees</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>City / Region in New Mexico</label>
+        <select id="g-city">
+          <option>Albuquerque</option>
+          <option>Santa Fe</option>
+          <option>Las Cruces</option>
+          <option>Taos</option>
+          <option>Roswell</option>
+          <option>Farmington</option>
+          <option>Other NM City</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Primary Goal</label>
+        <select id="g-goal">
+          <option>Stay compliant with NM laws</option>
+          <option>Automate payroll and HR</option>
+          <option>Grow revenue and find opportunities</option>
+          <option>Reduce operating costs</option>
+          <option>All of the above</option>
+        </select>
+      </div>
+      <button class="btn-primary" id="genesis-submit-btn" onclick="submitGenesis()">
+        &#9658; Create Business Profile
+      </button>
+      <div id="genesis-result"></div>
+    </div>
+
+    <!-- Hands-Off Mode -->
+    <div id="genesis-hands-form" style="display:none">
+      <div style="text-align:center;padding:32px 0">
+        <div style="font-size:48px;margin-bottom:16px">🤖</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">AI Auto-Detection</div>
+        <div style="font-size:14px;color:var(--text);margin-bottom:24px;line-height:1.6">
+          The AI will simulate scanning your system and automatically<br>detect your business type, tools, and compliance needs.
+        </div>
+        <button class="btn-primary btn-purple" id="handsoff-btn" onclick="startHandsOff()">
+          🤖 Start Auto-Detection
+        </button>
+      </div>
+      <div class="hands-off-stages" id="handsoff-stages" style="display:none"></div>
+      <div id="handsoff-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MARKET AI ══════════════════════════════════════════════════ -->
+<div id="page-market" class="page">
+  <div class="page-header">
+    <div class="page-title">Market Intelligence</div>
+    <div class="page-sub">Stochastic Oscillator + Ollama AI — BUY/SELL/HOLD analysis</div>
+  </div>
+  <div class="market-wrap">
+    <div class="disclaimer">⚠️ Analysis only — does not execute trades. For informational purposes. Consult a licensed financial advisor before acting on any signal.</div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px">
+      <select id="market-symbol" style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 16px;color:#fff;font-family:inherit;font-size:14px;outline:none">
+        <option value="DEMO">DEMO (Original PS Script Data)</option>
+      </select>
+      <button class="btn-primary" id="market-run-btn" onclick="runMarketAnalysis()">
+        ⚡ Run Stochastic Analysis
+      </button>
+      <div id="market-ollama-status" style="font-size:12px;color:var(--text2)">Checking Ollama...</div>
+    </div>
+    <div id="market-result" style="display:none">
+      <div class="stoch-bars">
+        <div class="stoch-bar"><div class="stoch-val" id="m-k" style="color:var(--purple)">—</div><div class="stoch-lbl">%K Line</div></div>
+        <div class="stoch-bar"><div class="stoch-val" id="m-d" style="color:var(--amber)">—</div><div class="stoch-lbl">%D Line</div></div>
+        <div class="stoch-bar"><div class="stoch-val" id="m-ctx" style="font-size:14px">—</div><div class="stoch-lbl">Context</div></div>
+      </div>
+      <div class="market-result" style="margin-top:16px">
+        <div class="exec-title">═══ STR8ZERO EXECUTOR BLOCK ═══</div>
+        <div class="exec-row">
+          <span class="exec-key">Engine Decision</span>
+          <span class="exec-val" id="m-action" style="font-size:32px">—</span>
+        </div>
+        <div class="exec-row">
+          <span class="exec-key">Confidence</span>
+          <span class="exec-val" id="m-conf">—</span>
+        </div>
+        <div class="exec-row">
+          <span class="exec-key">Model</span>
+          <span class="exec-val" id="m-model" style="font-size:12px;color:var(--text2)">—</span>
+        </div>
+        <div class="exec-reasoning">
+          <div class="exec-r-label">Strategy Rationale</div>
+          <div class="exec-r-text" id="m-reasoning">—</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:10px;text-align:center" id="m-ts"></div>
+    </div>
+    <div id="market-error"></div>
+  </div>
+</div>
+
+<!-- ══ SUPERVISOR ══════════════════════════════════════════════════ -->
+<div id="page-supervisor" class="page">
+  <div class="page-header">
+    <div class="page-title">Master Supervisor</div>
+    <div class="page-sub">8 AI micro-supervisors monitoring every system 24/7</div>
+  </div>
+  <div class="sup-wrap">
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:200px;text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">System State</div>
+        <div style="font-size:22px;font-weight:900;color:var(--green)" id="sup-state">—</div>
+      </div>
+      <div class="card" style="flex:1;min-width:200px;text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Uptime</div>
+        <div style="font-size:22px;font-weight:900;color:var(--green)" id="sup-uptime">—</div>
+        <div style="font-size:11px;color:var(--text2)">seconds</div>
+      </div>
+      <div class="card" style="flex:1;min-width:200px;text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Active Alerts</div>
+        <div style="font-size:22px;font-weight:900;color:var(--amber)" id="sup-alerts">—</div>
+      </div>
+      <button class="btn-sm" onclick="loadSupervisor()">↻ Refresh</button>
+    </div>
+    <div class="sup-grid" id="sup-grid">
+      <div class="empty">Loading supervisors...</div>
+    </div>
+    <div class="log-box" id="sup-log">Fetching supervisor logs...</div>
+  </div>
+</div>
+
+<!-- ══ DEV TOOLS ══════════════════════════════════════════════════ -->
+<div id="page-devtools" class="page">
+  <div class="page-header">
+    <div class="page-title">Dev Tools Audit</div>
+    <div class="page-sub">Issues detected and auto-fixed by STR8ZERO OS</div>
+  </div>
+  <div class="dev-wrap">
+    <div class="dash-grid" style="max-width:700px;margin:0 auto 24px">
+      <div class="card" style="text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Dev Health Score</div>
+        <div class="big-num" id="dev-score" style="color:var(--green)">—%</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Auto-Fixed</div>
+        <div class="big-num" style="color:var(--green)" id="dev-fixed">—</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Needs Review</div>
+        <div class="big-num" style="color:var(--amber)" id="dev-review">—</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-bottom:20px">
+      <button class="btn-sm" onclick="runHeaderCheck()">🔍 Run Live Header Check</button>
+      <span style="margin:0 8px;color:var(--text2)">·</span>
+      <button class="btn-sm" onclick="loadDevTools()">↻ Refresh Audit</button>
+    </div>
+    <div id="dev-header-result"></div>
+    <div class="fix-list" id="dev-fix-list">
+      <div class="empty">Loading audit results...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ASK AI ══════════════════════════════════════════════════ -->
+<div id="page-ask" class="page">
+  <div class="page-header">
+    <div class="page-title">Ask STR8ZERO AI</div>
+    <div class="page-sub">Ask anything about NM compliance, payroll, business operations</div>
+  </div>
+  <div class="ask-wrap">
+    <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:10px;padding:12px 16px;font-size:13px;color:rgba(245,158,11,0.8);margin-bottom:20px">
+      💡 Quick tries: "What's the NM GRT rate?", "Do I need workers comp?", "When is my SOS report due?"
+    </div>
+    <div class="ask-input-row">
+      <input class="ask-input" id="ask-input" type="text" placeholder="Ask about NM compliance, payroll, or business operations..."
+        onkeydown="if(event.key==='Enter')sendAsk()" />
+      <button class="btn-primary" onclick="sendAsk()">Send</button>
+    </div>
+    <div class="ask-history" id="ask-history">
+      <div class="empty">Ask a question to get started</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────
+const API = '';  // Same origin — Caddy proxies /api/* to backend
+
+// ── NAV ───────────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+  document.querySelectorAll('.ntab').forEach(t => {
+    if(t.textContent.toLowerCase().includes(name.toLowerCase().split('-')[0])) {
+      t.classList.add('active');
+    }
+  });
+  // Auto-load data for the page
+  const loaders = {dashboard:loadDashboard, compliance:loadCompliance,
+    supervisor:loadSupervisor, devtools:loadDevTools, market:loadMarketStatus};
+  if(loaders[name]) loaders[name]();
+}
+
+// ── FETCH HELPER ──────────────────────────────────────────────────
+async function api(path, opts={}) {
+  try {
+    const r = await fetch(API + path, {
+      headers: {'Content-Type':'application/json'},
+      ...opts
+    });
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch(e) {
+    console.warn('API error:', path, e.message);
+    return null;
+  }
+}
+
+// ── LIVE STATUS NAV ───────────────────────────────────────────────
+async function checkStatus() {
+  const d = await api('/health');
+  const el = document.getElementById('nav-status-text');
+  const pill = document.getElementById('nav-status');
+  if(d?.status === 'ok') {
+    el.textContent = 'Online';
+    pill.style.background = 'rgba(0,200,150,0.1)';
+    document.getElementById('h-uptime').textContent = d.port ? 'Port ' + d.port : '✓';
+  } else {
+    el.textContent = 'Reconnecting...';
+    pill.style.background = 'rgba(245,158,11,0.1)';
+    pill.style.borderColor = 'rgba(245,158,11,0.25)';
+    pill.style.color = 'var(--amber)';
+  }
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────
+async function loadDashboard() {
+  const [health, comp, sup, dev] = await Promise.all([
+    api('/api/v5/health'),
+    api('/api/simple/compliance'),
+    api('/api/v5/supervisor/report'),
+    api('/api/devtools/summary'),
+  ]);
+
+  if(health) {
+    set('d-state', health.systemState || 'healthy');
+    set('d-uptime', Math.floor(health.uptimeSeconds || 0));
+    set('d-version', '5.0.0');
+    set('d-env', 'production');
+    set('d-ai', health.aiOnline ? '✅ Ollama Online' : '⚠️ Cloud Mode');
+    set('d-profile', health.hasProfile ? ('✅ ' + (health.profileName || 'Active')) : '⏳ Not set');
+  }
+
+  if(comp) {
+    const s = comp.score || 0;
+    set('d-comp-score', s + '%');
+    set('d-comp-badge', s >= 70 ? 'Good' : s >= 50 ? 'Fair' : 'Needs Work');
+    document.getElementById('d-comp-bar').style.width = s + '%';
+    document.getElementById('d-comp-bar').style.background =
+      s >= 70 ? 'linear-gradient(90deg,var(--green),#00b4ff)' :
+      s >= 50 ? 'linear-gradient(90deg,var(--amber),#f97316)' :
+      'linear-gradient(90deg,var(--red),#f97316)';
+    set('d-good', comp.good || 0);
+    set('d-warn', comp.warning || 0);
+    set('d-danger', comp.danger || 0);
+    set('d-total', comp.total || 0);
+  }
+
+  if(sup) {
+    const svcs = sup.microSupervisors || [];
+    set('d-sup-count', svcs.length);
+    set('d-sup-badge', sup.systemState || 'healthy');
+    const listEl = document.getElementById('d-sup-list');
+    listEl.innerHTML = svcs.slice(0,4).map(s =>
+      `<div class="metric-row">
+        <span class="metric-lbl">${s.plainName || s.name}</span>
+        <span class="metric-val" style="color:${s.state==='healthy'?'var(--green)':'var(--amber)'}">${s.state}</span>
+      </div>`
+    ).join('');
+  }
+
+  if(dev) {
+    set('d-dev-score', (dev.score || 0) + '%');
+    set('d-dev-badge', (dev.score||0) >= 80 ? 'Healthy' : 'Issues');
+    set('d-dev-fixed', dev.autoFixed || 0);
+    set('d-dev-review', dev.needsReview || 0);
+    set('d-dev-total', (dev.autoFixed||0) + (dev.needsReview||0));
+  }
+}
+
+// ── COMPLIANCE ────────────────────────────────────────────────────
+async function loadCompliance() {
+  const d = await api('/api/simple/compliance');
+  if(!d) { document.getElementById('rule-list').innerHTML = '<div class="empty">Could not load compliance data</div>'; return; }
+
+  const score = d.score || 0;
+  set('comp-score-num', score + '%');
+  set('comp-good', d.good || 0);
+  set('comp-warn', d.warning || 0);
+  set('comp-danger', d.danger || 0);
+
+  // Animate ring
+  const circumference = 326.7;
+  const offset = circumference - (score / 100) * circumference;
+  const ring = document.getElementById('comp-ring');
+  ring.style.strokeDashoffset = offset;
+  ring.style.stroke = score >= 70 ? 'var(--green)' : score >= 50 ? 'var(--amber)' : 'var(--red)';
+
+  const statusMap = {
+    good: 's-good', warning: 's-warn', danger: 's-danger', unknown: 's-unknown'
+  };
+  const labelMap = {
+    good: '✅ Compliant', warning: '⚠️ Due Soon', danger: '❌ Action Required', unknown: '❓ Check Needed'
+  };
+
+  const rules = d.rules || [];
+  document.getElementById('rule-list').innerHTML = rules.length
+    ? rules.map(r => `
+      <div class="rule-item">
+        <div class="rule-icon">${r.emoji || '📋'}</div>
+        <div class="rule-body">
+          <div class="rule-title">${r.title}</div>
+          <div class="rule-desc">${r.plainDesc || r.description || ''}</div>
+          ${r.techRef ? `<div class="rule-ref">${r.techRef}</div>` : ''}
+        </div>
+        <div class="rule-status">
+          <div class="status-lbl ${statusMap[r.status] || 's-unknown'}">${r.statusLabel || labelMap[r.status] || r.status}</div>
+        </div>
+      </div>`).join('')
+    : '<div class="empty">No compliance rules loaded</div>';
+}
+
+// ── GENESIS ───────────────────────────────────────────────────────
+let genesisMode = 'guided';
+
+function setGenesisMode(mode) {
+  genesisMode = mode;
+  document.getElementById('gmode-guided').classList.toggle('active', mode === 'guided');
+  document.getElementById('gmode-hands').classList.toggle('active', mode === 'hands-off');
+  document.getElementById('genesis-guided-form').style.display = mode === 'guided' ? 'block' : 'none';
+  document.getElementById('genesis-hands-form').style.display = mode === 'hands-off' ? 'block' : 'none';
+}
+
+async function submitGenesis() {
+  const name = document.getElementById('g-biz-name').value.trim();
+  if(!name) { document.getElementById('genesis-result').innerHTML = '<div class="err">Business name is required</div>'; return; }
+  const btn = document.getElementById('genesis-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span> Creating Profile...';
+  document.getElementById('genesis-result').innerHTML = '';
+
+  const d = await api('/api/v5/genesis/guided', {
+    method: 'POST',
+    body: JSON.stringify({
+      answers: {
+        businessName: name,
+        businessType: document.getElementById('g-biz-type').value || 'General Business',
+        employees: document.getElementById('g-employees').value,
+        city: document.getElementById('g-city').value,
+        primaryGoal: document.getElementById('g-goal').value,
+      }
+    })
+  });
+
+  btn.disabled = false;
+  btn.innerHTML = '&#9658; Create Business Profile';
+
+  if(d?.success && d.profile) {
+    const p = d.profile;
+    document.getElementById('genesis-result').innerHTML = `
+      <div class="genesis-result" style="margin-top:20px">
+        <div class="genesis-result-title">✅ Business Profile Created</div>
+        ${row('Business Name', p.businessName)}
+        ${row('Type', p.businessType)}
+        ${row('Genesis Mode', p.genesisMode)}
+        ${row('Profile ID', p.id?.slice(0,8) + '...')}
+        ${row('Created', new Date(p.createdAt).toLocaleString())}
+        ${p.toolStack ? `<div style="margin-top:14px;font-size:12px;color:var(--text2)">Active Tools: ${p.toolStack.join(' · ')}</div>` : ''}
+      </div>`;
+    showProfileBanner(p.businessName);
+  } else {
+    document.getElementById('genesis-result').innerHTML = '<div class="err">Failed to create profile. Is the backend running?</div>';
+  }
+}
+
+async function startHandsOff() {
+  const btn = document.getElementById('handsoff-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span> Scanning...';
+  const stagesEl = document.getElementById('handsoff-stages');
+  stagesEl.style.display = 'flex';
+  stagesEl.innerHTML = '';
+  document.getElementById('handsoff-result').innerHTML = '';
+
+  try {
+    const resp = await fetch(API + '/api/v5/genesis/hands-off', {method:'POST'});
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while(true) {
+      const {done, value} = await reader.read();
+      if(done) break;
+      buffer += decoder.decode(value, {stream:true});
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for(const line of lines) {
+        if(line.startsWith('data: ')) {
+          try {
+            const data = JSON.parse(line.slice(6));
+            if(data.done) {
+              document.getElementById('handsoff-result').innerHTML =
+                '<div class="success" style="margin-top:16px">✅ Auto-detection complete! Profile created.</div>';
+              showProfileBanner('Auto-Detected Business');
+            } else {
+              const icon = data.status === 'complete' ? '✅' : '⏳';
+              stagesEl.innerHTML += `
+                <div class="stage ${data.status === 'complete' ? 'done' : 'active-stage'}">
+                  <span class="stage-icon">${icon}</span>
+                  <span style="font-size:13px">${data.plainMessage}</span>
+                </div>`;
+              stagesEl.scrollTop = stagesEl.scrollHeight;
+            }
+          } catch(e) {}
+        }
+      }
+    }
+  } catch(e) {
+    document.getElementById('handsoff-result').innerHTML = '<div class="err">Could not reach backend: ' + e.message + '</div>';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '🤖 Start Auto-Detection';
+}
+
+function showProfileBanner(name) {
+  document.getElementById('genesis-profile-banner').style.display = 'block';
+  document.getElementById('genesis-biz-name').textContent = name;
+}
+
+function clearGenesis() {
+  document.getElementById('genesis-profile-banner').style.display = 'none';
+  document.getElementById('genesis-result').innerHTML = '';
+  document.getElementById('g-biz-name').value = '';
+}
+
+// ── MARKET ────────────────────────────────────────────────────────
+async function loadMarketStatus() {
+  const d = await api('/api/market/status');
+  const el = document.getElementById('market-ollama-status');
+  if(d) {
+    el.textContent = d.ollamaOnline
+      ? '✅ Ollama online — ' + d.model
+      : '⚠️ Ollama offline — rule-based fallback will be used';
+    el.style.color = d.ollamaOnline ? 'var(--green)' : 'var(--amber)';
+  }
+}
+
+async function runMarketAnalysis() {
+  const symbol = document.getElementById('market-symbol').value;
+  const btn = document.getElementById('market-run-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span> Analyzing...';
+  document.getElementById('market-error').innerHTML = '';
+
+  const endpoint = symbol === 'DEMO' ? '/api/market/analyze/demo' : '/api/market/analyze/' + symbol;
+  const d = await api(endpoint, {method:'POST'});
+
+  btn.disabled = false;
+  btn.innerHTML = '⚡ Run Stochastic Analysis';
+
+  if(d?.signal) {
+    const s = d.signal;
+    const st = s.stochastic;
+    const dec = s.decision;
+    const actionColor = dec.action === 'BUY' ? 'var(--green)' : dec.action === 'SELL' ? 'var(--red)' : 'var(--amber)';
+    const ctxColor = st.context === 'OVERSOLD' ? 'var(--green)' : st.context === 'OVERBOUGHT' ? 'var(--red)' : 'var(--text)';
+
+    document.getElementById('market-result').style.display = 'block';
+    set('m-k', st.percentK?.toFixed(2) || '—');
+    set('m-d', st.percentD?.toFixed(2) || '—');
+    document.getElementById('m-ctx').textContent = st.context || '—';
+    document.getElementById('m-ctx').style.color = ctxColor;
+    document.getElementById('m-action').textContent = dec.action;
+    document.getElementById('m-action').style.color = actionColor;
+    set('m-conf', Math.round((dec.confidence||0)*100) + '%');
+    set('m-model', s.model || '—');
+    set('m-reasoning', dec.reasoning || '—');
+    set('m-ts', new Date(s.timestamp).toLocaleString() + ' · ' + (s.dataSource || '') + ' data');
+  } else {
+    document.getElementById('market-error').innerHTML = '<div class="err">Analysis failed. The market service may still be loading.</div>';
+  }
+}
+
+// ── SUPERVISOR ────────────────────────────────────────────────────
+async function loadSupervisor() {
+  const d = await api('/api/v5/supervisor/report');
+  if(!d) { document.getElementById('sup-grid').innerHTML = '<div class="empty">Supervisor data unavailable</div>'; return; }
+
+  set('sup-state', d.systemState || 'healthy');
+  set('sup-uptime', Math.floor(d.uptimeSeconds || 0));
+  set('sup-alerts', (d.activeAlerts || []).length);
+
+  const svcs = d.microSupervisors || [];
+  document.getElementById('sup-grid').innerHTML = svcs.length
+    ? svcs.map(s => `
+      <div class="sup-card">
+        <div class="sup-head">
+          <span class="sup-name">${s.plainName || s.name || s.id}</span>
+          <span class="sup-state ${s.state === 'healthy' ? 's-healthy' : 's-degraded'}">${s.state}</span>
+        </div>
+        <div class="sup-repairs">${s.repairCount || 0}</div>
+        <div class="sup-rl">repairs performed</div>
+      </div>`).join('')
+    : '<div class="empty">No supervisor data available</div>';
+
+  const logEl = document.getElementById('sup-log');
+  const repairs = d.recentRepairs || [];
+  logEl.innerHTML = repairs.length
+    ? repairs.map(r => `[${new Date(r.timestamp||Date.now()).toLocaleTimeString()}] ${r.supervisor || 'supervisor'}: ${r.action || 'repair'}`).join('<br>')
+    : `[${new Date().toLocaleTimeString()}] All systems healthy. No repairs needed.<br>[${new Date().toLocaleTimeString()}] Master Supervisor monitoring ${svcs.length} micro-supervisors.<br>[${new Date().toLocaleTimeString()}] Uptime: ${Math.floor(d.uptimeSeconds||0)}s`;
+}
+
+// ── DEV TOOLS ─────────────────────────────────────────────────────
+async function loadDevTools() {
+  const d = await api('/api/devtools/report');
+  if(!d) { document.getElementById('dev-fix-list').innerHTML = '<div class="empty">Dev tools data unavailable</div>'; return; }
+
+  set('dev-score', (d.overallScore || 0) + '%');
+  set('dev-fixed', d.autoFixed || 0);
+  set('dev-review', d.needsReview || 0);
+
+  const issues = (d.issues || []).filter(i => i.status !== 'dismissed');
+  const catIcon = c => c==='security'?'🔒':c==='accessibility'?'♿':c==='css_compat'?'🎨':c==='performance'?'⚡':'🔧';
+
+  document.getElementById('dev-fix-list').innerHTML = issues.length
+    ? issues.map(i => `
+      <div class="fix-item">
+        <div class="fix-icon">${catIcon(i.category)}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+            <div class="fix-title">${i.title}</div>
+            <span class="card-badge ${i.status==='auto_fixed'?'badge-green':i.status==='needs_review'?'badge-amber':'badge-red'}">
+              ${i.status === 'auto_fixed' ? '✅ Auto-Fixed' : i.status === 'needs_review' ? '🔍 Review' : i.status}
+            </span>
+          </div>
+          <div class="fix-text">${i.plainDescription || i.description}</div>
+          ${i.resolution ? `<div class="fix-resolution">${i.resolution}</div>` : ''}
+        </div>
+      </div>`).join('')
+    : '<div class="empty">No issues tracked</div>';
+}
+
+async function runHeaderCheck() {
+  const el = document.getElementById('dev-header-result');
+  el.innerHTML = '<div class="card-sub">🔍 Running live header check...</div>';
+  const d = await api('/api/devtools/check-headers');
+  if(!d) { el.innerHTML = '<div class="err">Could not reach backend</div>'; return; }
+  el.innerHTML = `
+    <div class="card" style="max-width:700px;margin:0 auto 16px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px">Live Security Header Check</div>
+      ${(d.passed||[]).map(p=>`<div style="font-size:13px;color:var(--green);padding:4px 0">✅ ${p}</div>`).join('')}
+      ${(d.failed||[]).map(f=>`<div style="font-size:13px;color:var(--red);padding:4px 0">❌ ${f}</div>`).join('')}
+      ${!d.passed?.length && !d.failed?.length ? '<div class="card-sub">No header data returned</div>' : ''}
+    </div>`;
+}
+
+// ── ASK AI ────────────────────────────────────────────────────────
+async function sendAsk() {
+  const input = document.getElementById('ask-input');
+  const q = input.value.trim();
+  if(!q) return;
+  input.value = '';
+
+  const history = document.getElementById('ask-history');
+  if(history.querySelector('.empty')) history.innerHTML = '';
+
+  history.innerHTML += `<div class="ask-msg ask-user">${escHtml(q)}</div>`;
+  history.innerHTML += `<div class="ask-msg ask-ai" id="ask-last"><div class="ask-ai-label">STR8ZERO AI</div><span class="loading"></span></div>`;
+  history.scrollTop = history.scrollHeight;
+
+  const d = await api('/api/simple/ask', {
+    method: 'POST',
+    body: JSON.stringify({question: q, businessContext: 'New Mexico small business'})
+  });
+
+  const lastEl = document.getElementById('ask-last');
+  if(d?.answer) {
+    lastEl.innerHTML = `<div class="ask-ai-label">STR8ZERO AI${d.validated !== false ? ' ✓' : ''}</div>${escHtml(d.answer)}`;
+  } else {
+    lastEl.innerHTML = `<div class="ask-ai-label">STR8ZERO AI</div>
+      The AI assistant is available in local mode when Ollama is running on your Alienware. 
+      For NM compliance questions, try the <button class="btn-sm" style="font-size:11px;padding:4px 10px" onclick="showPage('compliance')">Compliance tab</button>`;
+  }
+  history.scrollTop = history.scrollHeight;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────
+function set(id, val) {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
+function row(k, v) {
+  return `<div class="profile-row"><span class="profile-key">${k}</span><span class="profile-val">${v || '—'}</span></div>`;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+checkStatus();
+setInterval(checkStatus, 15000);
+loadDashboard(); // preload dashboard data
+</script>
+</body>
+</html>
